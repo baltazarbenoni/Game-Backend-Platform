@@ -1,5 +1,7 @@
-public class InvalidNameException : Exception
+namespace Domain.Exceptions
 {
-    //public InvalidNameException(string displayName) : 
-
+    public class InvalidNameException : Exception
+    {
+        public InvalidNameException(string displayName) : base($"The name {displayName} is invalid. Name must contain at least 3 characters"){}
+    }
 }
