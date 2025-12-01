@@ -44,6 +44,7 @@ namespace Application.Services
             {
                 string newPassword = HashPassword(user, password);
                 user.SetPassword(newPassword);
+                await userRepository.UpdateAsync(user);
             }
             return user;
         }
