@@ -4,14 +4,17 @@ namespace Domain.Entities
 {
     public class User
     {
-        public User(string email, string password, string displayName)
+        public User(string email, string displayName)
         {
+            Email = email;
+            DisplayName = displayName;
+            PasswordHash = "";
             CreatedAt = DateTime.Now;
         }
         public Guid Id { get; set; } 
-        public required string Email { get; set; }
-        public required string PasswordHash { get; set; }
-        public required string DisplayName { get; set; }
+        public string Email { get; set; }
+        public string PasswordHash { get; set; }
+        public string DisplayName { get; set; }
         public int Level { get; set; }
         public bool isBanned { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -23,6 +26,10 @@ namespace Domain.Entities
         public void LevelUp()
         {
             Level++;
+        }
+        public void SetPassword(string password)
+        {
+            PasswordHash = password;
         }
         public void ChangeName(string newName)
         {

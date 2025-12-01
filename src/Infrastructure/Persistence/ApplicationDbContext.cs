@@ -1,4 +1,6 @@
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Infrastructure.Persistence
 {
@@ -8,5 +10,6 @@ namespace Infrastructure.Persistence
             : base(options)
         {
         }
+        public DbSet<User> Users { get; private set; } 
     }
 }

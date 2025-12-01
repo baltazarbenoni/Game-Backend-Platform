@@ -4,13 +4,7 @@ namespace Application.Interfaces
 {
     public interface IUserRepository
     {
-        public void AddAsync(User user)
-        {
-
-        }
-        public User GetByEmailAsync(string email)
-        {
-
-        }
+        Task AddAsync(User user);
+        Task<User?> GetByEmailAsync(string email);
     }
 }
