@@ -14,7 +14,7 @@ This project was created to:
 
 ---
 
-## Technology Stack
+## Tech Stack
 
 | Layer | Technology |
 |-------|------------|
