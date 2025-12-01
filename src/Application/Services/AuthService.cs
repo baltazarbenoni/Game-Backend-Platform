@@ -28,14 +28,24 @@ namespace Application.Services
             user.SetPassword(hashedPassword);
             await userRepository.AddAsync(user);
         }
-        public async Task LoginAsync(string email, string password)
+        public async Task<User?> LoginAsync(string email, string password)
         {
-            var existingUser = await userRepository.GetByEmailAsync(email);
-            if(existingUser == null)
+            var user = await userRepository.GetByEmailAsync(email);
+            if(user == null)
             {
                 throw new Exception("Invalid email, couldn't fetch user.");
             }
-
+            PasswordVerificationResult result = hasher.VerifyHashedPassword(user, user.PasswordHash, password);
+            if(result == PasswordVerificationResult.Failed)
+            {
+                throw new Exception("Password incorrect.");
+            }
+            if(result == PasswordVerificationResult.SuccessRehashNeeded)
+            {
+                string newPassword = HashPassword(user, password);
+                user.SetPassword(newPassword);
+            }
+            return user;
         }
         public string HashPassword(User user, string password)
         {
