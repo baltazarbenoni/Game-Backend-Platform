@@ -1,8 +1,10 @@
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Application.Services;
 using Application.Interfaces;
 using Infrastructure.Repositories;
+using Application.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +29,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<RegistrationValidator>();
+builder.Services.AddScoped<LoginValidator>();
 #endregion
 
 #region Build

@@ -1,6 +1,6 @@
 using Application.Services;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Application.DTOs;
 
 namespace Api.Controllers
 {
@@ -18,7 +18,7 @@ namespace Api.Controllers
         {
             string email = request.Email;
             string password = request.Password;
-            string displayName = "";
+            string displayName = request.DisplayName;
             try
             {
                 await authService.RegisterAsync(email, password, displayName);
