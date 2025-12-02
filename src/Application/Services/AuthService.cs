@@ -52,13 +52,5 @@ namespace Application.Services
         {
             return hasher.HashPassword(user, password);
         }
-
-        /*
-Validate input (length, format, duplicates)
-
-Create new User entity
-
-Save User via repository
-        */
     }
 }

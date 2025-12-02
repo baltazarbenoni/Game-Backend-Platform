@@ -1,5 +1,8 @@
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Application.Services;
+using Application.Interfaces;
+using Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+#region Db connection
 string GetConnectionString()
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -17,8 +21,17 @@ string GetConnectionString()
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(GetConnectionString()));
+#endregion
 
+#region Controllers 
+builder.Services.AddControllers();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+#endregion
+
+#region Build
 var app = builder.Build();
+#endregion
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -28,6 +41,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.MapControllers();
 app.Run();
 
