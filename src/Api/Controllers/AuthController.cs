@@ -1,9 +1,11 @@
 using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Application.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AuthController : Controller
