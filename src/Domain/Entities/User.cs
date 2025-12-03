@@ -9,7 +9,8 @@ namespace Domain.Entities
             Email = email;
             DisplayName = displayName;
             PasswordHash = "";
-            CreatedAt = DateTime.Now;
+            CreatedAt = DateTime.UtcNow;
+            LastLogin = CreatedAt;
         }
         public Guid Id { get; set; } 
         public string Email { get; set; }
