@@ -7,11 +7,13 @@ namespace Application.Services
 {
     public class AuthService : IUserService
     {
-        public AuthService(IUserRepository userRepository, RegistrationValidator validator)
+        public AuthService(IUserRepository userRepository, RegistrationValidator validator, JwtService jwtService)
         {
             this.userRepository = userRepository;
             this.registrationValidator = validator;
+            this.jwtService = jwtService;
         }
+        private readonly JwtService jwtService;
         private readonly IUserRepository userRepository;
         private readonly RegistrationValidator registrationValidator;
         private readonly PasswordHasher<User> hasher = new();
@@ -28,7 +30,7 @@ namespace Application.Services
             user.SetPassword(hashedPassword);
             await userRepository.AddAsync(user);
         }
-        public async Task<User?> LoginAsync(string email, string password)
+        public async Task<string?> LoginAsync(string email, string password)
         {
             var user = await userRepository.GetByEmailAsync(email);
             if(user == null)
@@ -46,7 +48,7 @@ namespace Application.Services
                 user.SetPassword(newPassword);
                 await userRepository.UpdateAsync(user);
             }
-            return user;
+            return jwtService.GenerateToken(user);
         }
         public string HashPassword(User user, string password)
         {
