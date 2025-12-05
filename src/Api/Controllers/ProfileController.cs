@@ -6,7 +6,6 @@ using System.Security.Claims;
 
 namespace Api.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ProfileController : Controller
@@ -16,13 +15,31 @@ namespace Api.Controllers
             this.profileService = profileService;
         }
         private readonly ProfileService profileService;
+        [HttpGet("profile")]
+        [Authorize]
         public async Task<IActionResult> Profile()
         {
             var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             try
             {
-                var displayName = await profileService.GetProfileAsync(id!);
-                return Ok(new { displayName });
+                var profile = await profileService.GetProfileAsync(id!);
+                return Ok(new { profile });
+
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("stats")]
+        [Authorize]
+        public async Task<IActionResult> Stats()
+        {
+            var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            try
+            {
+                var stats = await profileService.GetStatsAsync(id!);
+                return Ok(new { stats });
 
             }
             catch(Exception ex)
