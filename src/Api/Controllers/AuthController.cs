@@ -16,6 +16,7 @@ namespace Api.Controllers
         }
         private readonly AuthService authService;
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterRequest request)
         {
             string email = request.Email;
@@ -32,6 +33,7 @@ namespace Api.Controllers
             }
         }
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginRequest request)
         {
             string email = request.Email;
@@ -46,6 +48,5 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
     }
 }
