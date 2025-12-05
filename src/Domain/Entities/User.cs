@@ -17,6 +17,7 @@ namespace Domain.Entities
         public string PasswordHash { get; set; }
         public string DisplayName { get; set; }
         public int Level { get; set; }
+        public int GamesPlayed { get; set; }
         public bool isBanned { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime LastLogin { get; set; }
@@ -27,6 +28,10 @@ namespace Domain.Entities
         public void LevelUp()
         {
             Level++;
+        }
+        public void IncrementGamesPlayed()
+        {
+            GamesPlayed++;
         }
         public void SetPassword(string password)
         {
