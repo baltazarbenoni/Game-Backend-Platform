@@ -35,7 +35,7 @@ namespace Api.Controllers
         [Authorize]
         public async Task<IActionResult> Stats()
         {
-            var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var id = User.FindFirst("id")?.Value;
             try
             {
                 var stats = await profileService.GetStatsAsync(id!);

@@ -13,7 +13,7 @@ namespace Application.Services
 
         public async Task<ProfileRequest?> GetProfileAsync(string id)
         {
-            var user = await userRepository.GetByEmailAsync(id);
+            var user = await userRepository.GetUserByIdAsync(new Guid(id));
             if(user == null)
             {
                 throw new Exception("User not found.");

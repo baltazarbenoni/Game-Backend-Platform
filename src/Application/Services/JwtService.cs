@@ -15,13 +15,9 @@ namespace Application.Services
         }
         private JwtSettings _settings { get; }
         public string GenerateToken(User user)
-        {
-            Console.WriteLine("JWT Secret: " + _settings.Secret);
-            Console.WriteLine("JWT Issuer: " + _settings.Issuer);
-            Console.WriteLine("JWT Audience: " + _settings.Audience);
-            
-            Claim emailClaim = new Claim(ClaimTypes.Email, user.Email);
-            Claim idClaim = new Claim(ClaimTypes.NameIdentifier, user.Id.ToString());
+        { 
+            Claim emailClaim = new Claim("email", user.Email);
+            Claim idClaim = new Claim("id", user.Id.ToString());
             var claims = new List<Claim> { emailClaim, idClaim };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Secret));
@@ -31,7 +27,7 @@ namespace Application.Services
                 issuer: _settings.Issuer,
                 audience: _settings.Audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(180),
+                expires: DateTime.UtcNow.AddMinutes(50),
                 signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
