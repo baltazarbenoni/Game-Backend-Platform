@@ -40,8 +40,8 @@ namespace Api.Controllers
             string password = request.Password;
             try
             {
-                var token = await authService.LoginAsync(email, password);
-                return Ok(new { token });
+                var authResponse = await authService.LoginAsync(email, password);
+                return Ok(new { authResponse });
             }
             catch(Exception ex)
             {

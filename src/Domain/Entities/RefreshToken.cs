@@ -2,12 +2,12 @@ namespace Domain.Entities
 {
     public class RefreshToken
     {
-        public RefreshToken(string userId, string token, DateTime expiresAt)
+        public RefreshToken(Guid userId, string token)
         {
             Id = Guid.NewGuid();
-            UserId = new Guid(userId);
+            UserId = userId;
             Token = token;
-            ExpiresAt = expiresAt;
+            ExpiresAt = DateTime.UtcNow.AddDays(7);
             CreatedAt = DateTime.UtcNow;
         }
         public Guid Id { get; set; }
