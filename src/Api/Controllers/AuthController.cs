@@ -41,22 +41,22 @@ namespace Api.Controllers
             try
             {
                 var authResponse = await authService.LoginAsync(email, password);
-                return Ok(new { authResponse });
+                return Ok(authResponse);
             }
             catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost("refresh-token")]
+        [HttpPost("refresh")]
         [AllowAnonymous]
-        public async Task<IActionResult> RefreshToken(RefreshTokenDto request)
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshRequestDto request)
         {
             string refreshToken = request.RefreshToken;
             try
             {
                 var token = await authService.RefreshTokenAsync(refreshToken);
-                return Ok(new { token });
+                return Ok(token);
             }
             catch(Exception ex)
             {

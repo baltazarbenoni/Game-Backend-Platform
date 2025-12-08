@@ -12,7 +12,7 @@ namespace Infrastructure.Repositories
             _context = context;
         }
         private readonly ApplicationDbContext _context;
-        public async Task AddAsync(RefreshToken token)
+        public async Task CreateAsync(RefreshToken token)
         {
             await _context.RefreshTokens.AddAsync(token);
             await _context.SaveChangesAsync();        
@@ -20,6 +20,11 @@ namespace Infrastructure.Repositories
         public async Task<RefreshToken?> GetByTokenAsync(string token)
         {
             return await _context.RefreshTokens.FirstOrDefaultAsync(t => t.Token == token && t.ExpiresAt > DateTime.UtcNow);
+        }
+        public async Task UpdateAsync(RefreshToken token)
+        {
+            _context.RefreshTokens.Update(token);
+            await  _context.SaveChangesAsync();
         }
     }
 }

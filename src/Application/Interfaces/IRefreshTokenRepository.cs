@@ -4,7 +4,8 @@ namespace Application.Interfaces
 {
     public interface IRefreshTokenRepository
     {
-        Task AddAsync(RefreshToken token);
+        Task CreateAsync(RefreshToken token);
+        Task UpdateAsync(RefreshToken token);
         Task<RefreshToken?> GetByTokenAsync(string token);
     }
 }

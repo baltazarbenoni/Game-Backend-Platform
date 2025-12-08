@@ -21,6 +21,7 @@ namespace Application.Services
         private readonly IRefreshTokenRepository refreshTokenRepository;
         private readonly RegistrationValidator registrationValidator;
         private readonly PasswordHasher<User> hasher = new();
+        #region Registration
         public async Task RegisterAsync(string email, string password, string displayName)
         {
             registrationValidator.Validate(email, password, displayName);
@@ -34,6 +35,7 @@ namespace Application.Services
             user.SetPassword(hashedPassword);
             await userRepository.AddAsync(user);
         }
+        #endregion
         #region Login
         public async Task<AuthResponseDto?> LoginAsync(string email, string password)
         {
@@ -64,7 +66,7 @@ namespace Application.Services
         public async Task<AuthResponseDto?> RefreshTokenAsync(string refreshToken)
         {
             var token = refreshTokenRepository.GetByTokenAsync(HashRefreshToken(refreshToken));
-            if(token == null)
+            if(token == null || token.Result!.IsActive == false)
             {
                 throw new Exception("Invalid refresh token.");
             }
@@ -73,6 +75,7 @@ namespace Application.Services
             {
                 throw new Exception("User not found for the given refresh token.");
             }
+            token.Result!.Revoke();
             return await GenerateTokens(user);
         }
         async Task<AuthResponseDto?> GenerateTokens(User user)
@@ -86,13 +89,12 @@ namespace Application.Services
             var response =  new AuthResponseDto{ AccessToken = token, RefreshToken = refresh };
             return response;
         }
-
-        public async Task<string?> GenerateRefreshToken(User user)
+        async Task<string?> GenerateRefreshToken(User user)
         {
             var token = jwtService.GenerateRefreshToken();
             string hashed = HashRefreshToken(token); 
             var refreshToken = new RefreshToken(user.Id, hashed);
-            await refreshTokenRepository.AddAsync(refreshToken);
+            await refreshTokenRepository.CreateAsync(refreshToken);
             return refreshToken.Token;
         }
         string HashRefreshToken(string refreshToken)
