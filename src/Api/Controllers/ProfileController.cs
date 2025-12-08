@@ -19,7 +19,11 @@ namespace Api.Controllers
         [Authorize]
         public async Task<IActionResult> Profile()
         {
-            var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var id = User.FindFirst("id")?.Value;
+            if(id == null)
+            {
+                return BadRequest("User id not found in token.");
+            }
             try
             {
                 var profile = await profileService.GetProfileAsync(id!);

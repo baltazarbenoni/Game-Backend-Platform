@@ -48,5 +48,20 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPost("refresh-token")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RefreshToken(RefreshTokenDto request)
+        {
+            string refreshToken = request.RefreshToken;
+            try
+            {
+                var token = await authService.RefreshTokenAsync(refreshToken);
+                return Ok(new { token });
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -8,5 +8,6 @@ namespace Application.Interfaces
         Task UpdateAsync(User user);
         Task<User?> GetByEmailAsync(string email);
         Task<User?> GetUserByIdAsync(Guid id);
+        Task<User?> GetUserByRefreshTokenAsync(string refreshToken);
     }
 }

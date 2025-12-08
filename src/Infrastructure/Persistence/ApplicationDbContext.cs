@@ -11,5 +11,6 @@ namespace Infrastructure.Persistence
         {
         }
         public DbSet<User> Users { get; private set; } 
+        public DbSet<RefreshToken> RefreshTokens { get; private set; }
     }
 }

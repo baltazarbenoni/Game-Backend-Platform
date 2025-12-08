@@ -54,5 +54,14 @@ namespace Application.Services
         {
             return hasher.HashPassword(user, password);
         }
+        public async Task<string?> RefreshTokenAsync(string refreshToken)
+        {
+            var user = await userRepository.GetUserByRefreshTokenAsync(refreshToken);
+            if(user == null)
+            {
+                throw new Exception("Invalid refresh token.");
+            }
+            return jwtService.GenerateToken(user);
+        }
     }
 }

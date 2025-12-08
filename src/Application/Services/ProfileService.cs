@@ -13,7 +13,8 @@ namespace Application.Services
 
         public async Task<ProfileRequest?> GetProfileAsync(string id)
         {
-            var user = await userRepository.GetUserByIdAsync(new Guid(id));
+            var guid = new Guid(id);
+            var user = await userRepository.GetUserByIdAsync(guid);
             if(user == null)
             {
                 throw new Exception("User not found.");
