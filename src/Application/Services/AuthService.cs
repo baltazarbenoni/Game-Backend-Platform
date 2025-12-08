@@ -65,17 +65,17 @@ namespace Application.Services
         #region Refresh Token
         public async Task<AuthResponseDto?> RefreshTokenAsync(string refreshToken)
         {
-            var token = refreshTokenRepository.GetByTokenAsync(HashRefreshToken(refreshToken));
-            if(token == null || token.Result!.IsActive == false)
+            var token = await refreshTokenRepository.GetByTokenAsync(HashRefreshToken(refreshToken));
+            if(token == null || token.IsActive == false)
             {
                 throw new Exception("Invalid refresh token.");
             }
-            var user = await userRepository.GetUserByIdAsync(token.Result!.UserId);
+            var user = await userRepository.GetUserByIdAsync(token.UserId);
             if(user == null)
             {
                 throw new Exception("User not found for the given refresh token.");
             }
-            token.Result!.Revoke();
+            token.Revoke();
             return await GenerateTokens(user);
         }
         async Task<AuthResponseDto?> GenerateTokens(User user)
@@ -95,7 +95,7 @@ namespace Application.Services
             string hashed = HashRefreshToken(token); 
             var refreshToken = new RefreshToken(user.Id, hashed);
             await refreshTokenRepository.CreateAsync(refreshToken);
-            return refreshToken.Token;
+            return token;
         }
         string HashRefreshToken(string refreshToken)
         {

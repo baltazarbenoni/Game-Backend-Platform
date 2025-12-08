@@ -53,6 +53,10 @@ namespace Api.Controllers
         public async Task<IActionResult> RefreshToken([FromBody] RefreshRequestDto request)
         {
             string refreshToken = request.RefreshToken;
+            if(refreshToken == null)
+            {
+                return BadRequest("Refresh token is required.");
+            }
             try
             {
                 var token = await authService.RefreshTokenAsync(refreshToken);
