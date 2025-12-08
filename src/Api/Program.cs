@@ -92,7 +92,7 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret)),
-        ClockSkew = TimeSpan.FromMinutes(5)
+        //ClockSkew = TimeSpan.FromMinutes(5)
     };
 });
 
