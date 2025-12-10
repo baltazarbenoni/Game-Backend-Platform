@@ -90,7 +90,7 @@ namespace Application.Services
             var refresh = await GenerateRefreshToken(user);
             if(refresh == null)
             {
-                throw new BadRequestException("Could not save refresh token.");
+                throw new DatabaseException("Could not save refresh token.");
             }
             var response =  new AuthResponseDto{ AccessToken = token, RefreshToken = refresh };
             return response;
@@ -119,7 +119,14 @@ namespace Application.Services
                 throw new BadRequestException("Couln't extract user from request");
             }
             Guid id = new Guid(userId);
-            await refreshTokenRepository.RevokeAll(id);
+            try
+            {
+                await refreshTokenRepository.RevokeAll(id);
+            }
+            catch(Exception ex)
+            {
+                throw new MyException(ex.Message);
+            }
         }
         #endregion
     }

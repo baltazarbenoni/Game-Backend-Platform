@@ -32,4 +32,11 @@ namespace Application.Exceptions
             StatusCode = StatusCodes.Status404NotFound;
         }
     }
+    public class DatabaseException : MyException
+    {
+        public DatabaseException(string message) : base(message)
+        {
+            StatusCode = StatusCodes.Status409Conflict;
+        }
+    }
 }
