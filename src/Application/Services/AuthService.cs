@@ -4,6 +4,8 @@ using Application.Interfaces;
 using Application.Validators;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Application.Exceptions;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Application.Services
 {
@@ -28,7 +30,7 @@ namespace Application.Services
             var existingUser = await userRepository.GetByEmailAsync(email);
             if(existingUser != null)
             {
-                throw new Exception("Email already in database.");
+                throw new BadRequestException("Email already in database.");
             }
             User user = new User(email, displayName);
             string hashedPassword = HashPassword(user, password);
@@ -42,12 +44,12 @@ namespace Application.Services
             var user = await userRepository.GetByEmailAsync(email);
             if(user == null)
             {
-                throw new Exception("Invalid email, couldn't fetch user.");
+                throw new NotFoundException("Invalid email, couldn't fetch user.");
             }
             PasswordVerificationResult result = hasher.VerifyHashedPassword(user, user.PasswordHash, password);
             if(result == PasswordVerificationResult.Failed)
             {
-                throw new Exception("Password incorrect.");
+                throw new UnauthorizedException("Password incorrect.");
             }
             if(result == PasswordVerificationResult.SuccessRehashNeeded)
             {
@@ -63,17 +65,21 @@ namespace Application.Services
         }
         #endregion
         #region Refresh Token
-        public async Task<AuthResponseDto?> RefreshTokenAsync(string refreshToken)
+        public async Task<AuthResponseDto?> RefreshTokenAsync(string? refreshToken)
         {
+            if(refreshToken == null)
+            {
+                throw new BadRequestException("Couldn't extract token from request");
+            }
             var token = await refreshTokenRepository.GetByTokenAsync(HashRefreshToken(refreshToken));
             if(token == null || token.IsActive == false)
             {
-                throw new Exception("Invalid refresh token.");
+                throw new UnauthorizedException("Invalid refresh token.");
             }
             var user = await userRepository.GetUserByIdAsync(token.UserId);
             if(user == null)
             {
-                throw new Exception("User not found for the given refresh token.");
+                throw new NotFoundException("User not found for the given refresh token.");
             }
             token.Revoke();
             return await GenerateTokens(user);
@@ -84,7 +90,7 @@ namespace Application.Services
             var refresh = await GenerateRefreshToken(user);
             if(refresh == null)
             {
-                throw new Exception("Could not save refresh token.");
+                throw new BadRequestException("Could not save refresh token.");
             }
             var response =  new AuthResponseDto{ AccessToken = token, RefreshToken = refresh };
             return response;
@@ -106,8 +112,12 @@ namespace Application.Services
                 return Convert.ToBase64String(hash);
             }
         }
-        public async Task RevokeAllRefreshTokensAsync(string userId)
+        public async Task RevokeAllRefreshTokensAsync(string? userId)
         {
+            if(userId == null)
+            {
+                throw new BadRequestException("Couln't extract user from request");
+            }
             Guid id = new Guid(userId);
             await refreshTokenRepository.RevokeAll(id);
         }

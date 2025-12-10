@@ -22,15 +22,8 @@ namespace Api.Controllers
             string email = request.Email;
             string password = request.Password;
             string displayName = request.DisplayName;
-            try
-            {
-                await authService.RegisterAsync(email, password, displayName);
-                return Ok("User registered successfully.");
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await authService.RegisterAsync(email, password, displayName);
+            return Ok("User registered successfully.");
         }
         [HttpPost("login")]
         [AllowAnonymous]
@@ -38,53 +31,24 @@ namespace Api.Controllers
         {
             string email = request.Email;
             string password = request.Password;
-            try
-            {
-                var authResponse = await authService.LoginAsync(email, password);
-                return Ok(authResponse);
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var authResponse = await authService.LoginAsync(email, password);
+            return Ok(authResponse);
         }
         [HttpPost("logout")]
         [Authorize]
         public async Task<IActionResult> Logout()
         {
             var userId = User.FindFirst("id")?.Value;
-            if(userId == null)
-            {
-                return BadRequest("User id not found");
-            }
-            try
-            {
-                await authService.RevokeAllRefreshTokensAsync(userId);
-                return NoContent();
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await authService.RevokeAllRefreshTokensAsync(userId);
+            return NoContent();
         }
         [HttpPost("refresh")]
         [AllowAnonymous]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshRequestDto request)
         {
             string refreshToken = request.RefreshToken;
-            if(refreshToken == null)
-            {
-                return BadRequest("Refresh token is required.");
-            }
-            try
-            {
-                var token = await authService.RefreshTokenAsync(refreshToken);
-                return Ok(token);
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var token = await authService.RefreshTokenAsync(refreshToken);
+            return Ok(token);
         }
     }
 }

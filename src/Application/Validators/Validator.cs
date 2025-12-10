@@ -1,3 +1,5 @@
+using Application.Exceptions;
+
 namespace Application.Validators
 {
     public class Validator
@@ -10,7 +12,7 @@ namespace Application.Validators
         {
             if(!condition)
             {
-                throw new Exception(message);
+                throw new BadRequestException(message);
             }
         }
     }

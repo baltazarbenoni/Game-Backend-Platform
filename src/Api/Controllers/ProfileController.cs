@@ -20,36 +20,16 @@ namespace Api.Controllers
         public async Task<IActionResult> Profile()
         {
             var id = User.FindFirst("id")?.Value;
-            if(id == null)
-            {
-                return BadRequest("User id not found in token.");
-            }
-            try
-            {
-                var profile = await profileService.GetProfileAsync(id!);
-                return Ok(new { profile });
-
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var profile = await profileService.GetProfileAsync(id!);
+            return Ok(new { profile });
         }
         [HttpGet("stats")]
         [Authorize]
         public async Task<IActionResult> Stats()
         {
             var id = User.FindFirst("id")?.Value;
-            try
-            {
-                var stats = await profileService.GetStatsAsync(id!);
-                return Ok(new { stats });
-
-            }
-            catch(Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var stats = await profileService.GetStatsAsync(id!);
+            return Ok(new { stats });
         }
     }
 
