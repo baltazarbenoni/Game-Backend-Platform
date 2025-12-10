@@ -106,6 +106,11 @@ namespace Application.Services
                 return Convert.ToBase64String(hash);
             }
         }
+        public async Task RevokeAllRefreshTokensAsync(string userId)
+        {
+            Guid id = new Guid(userId);
+            await refreshTokenRepository.RevokeAll(id);
+        }
         #endregion
     }
 }

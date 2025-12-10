@@ -7,5 +7,6 @@ namespace Application.Interfaces
         Task CreateAsync(RefreshToken token);
         Task UpdateAsync(RefreshToken token);
         Task<RefreshToken?> GetByTokenAsync(string token);
+        Task RevokeAll(Guid id);
     }
 }

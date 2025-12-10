@@ -48,6 +48,25 @@ namespace Api.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            var userId = User.FindFirst("id")?.Value;
+            if(userId == null)
+            {
+                return BadRequest("User id not found");
+            }
+            try
+            {
+                await authService.RevokeAllRefreshTokensAsync(userId);
+                return NoContent();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         [HttpPost("refresh")]
         [AllowAnonymous]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshRequestDto request)
